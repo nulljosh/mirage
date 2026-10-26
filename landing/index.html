@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mirage</title>
+<meta name="description" content="Mirage is a small desert platformer that runs inside Joshua Tree, a computer built from scratch. Play it here.">
+<meta property="og:title" content="Mirage">
+<meta property="og:description" content="The spring is real. Go and get it.">
+<meta property="og:image" content="https://mirage.jaybulb.com/ad-poster.jpg">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font); font-size: 17px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  main { max-width: 1008px; margin: 0 auto; padding: var(--s6) var(--s2) var(--s12); }
+  header { display: flex; align-items: center; gap: var(--s2); }
+  header img { width: 56px; height: 56px; border-radius: var(--r-md); }
+  h1 { font-size: 34px; letter-spacing: -0.02em; margin: 0; }
+  .tag { font-size: 22px; color: var(--muted); margin: var(--s2) 0 var(--s3); max-width: 640px; }
+  .game { position: relative; background: var(--night); border-radius: var(--r-md); overflow: hidden; outline: none; }
+  .game canvas { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; image-rendering: pixelated; cursor: pointer; }
+  .game .hint { position: absolute; left: 0; right: 0; bottom: var(--s2); text-align: center; color: #faf8f4; font-size: 15px; pointer-events: none; }
+  .game:focus .hint { display: none; }
+  .keys { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s3); color: var(--muted); font-size: 15px; margin: var(--s2) 0 0; }
+  kbd { font-family: var(--font); font-size: 13px; border: 1px solid var(--line); border-radius: var(--r-sm); padding: 2px 8px; color: var(--ink); }
+  .pad { display: none; gap: var(--s1); margin-top: var(--s2); }
+  .pad button { flex: 1; height: var(--control); border-radius: var(--r-pill); border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: 600 15px var(--font); touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+  .pad button.go { background: var(--terra); border-color: var(--terra); color: #faf8f4; }
+  @media (hover: none) and (pointer: coarse) { .pad { display: flex; } .keys { display: none; } }
+  section { margin-top: var(--s12); }
+  h2 { font-size: 24px; letter-spacing: -0.01em; margin: 0 0 var(--s2); }
+  p { margin: 0 0 var(--s2); max-width: 680px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--s2); }
+  .card { border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s3); }
+  .card h3 { font-size: 17px; margin: 0 0 var(--s1); }
+  .card p { color: var(--muted); font-size: 15px; margin: 0; }
+  video { display: block; width: 100%; border-radius: var(--r-md); background: var(--night); }
+  .cta { display: inline-flex; align-items: center; height: var(--control); padding: 0 var(--s3); border-radius: var(--r-pill); background: var(--terra); color: #faf8f4; font-weight: 600; text-decoration: none; }
+  .cta.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); margin-left: var(--s1); }
+  footer { margin-top: var(--s12); color: var(--muted); font-size: 15px; }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+<main>
+  <header><img src="icon.svg" alt=""><h1>Mirage</h1></header>
+  <p class="tag">The spring is real. Go and get it.</p>
+
+  <div class="game" id="game" tabindex="0" aria-label="Mirage, playable: click, then use the keyboard">
+    <canvas id="screen" width="960" height="540"></canvas>
+    <div class="hint">Click to play</div>
+  </div>
+  <div class="keys"><span><kbd>A</kbd> <kbd>D</kbd> walk</span><span><kbd>W</kbd> jump</span><span><kbd>Space</kbd> swing</span><span><kbd>S</kbd> talk and turn the page</span></div>
+  <div class="pad" aria-hidden="true">
+    <button data-key="97">Left</button><button data-key="100">Right</button><button data-key="119">Jump</button><button class="go" data-key="32">Swing</button><button data-key="115">Talk</button>
+  </div>
+
+  <section>
+    <h2>The creek has been dry for forty days</h2>
+    <p>The spring on the mesa above the town of Arroyo has gone quiet. Wren carries the town's water, and there is none left to carry. So she takes Elder Pina's walking staff and climbs: through Red Canyon, up the Cholla Caves for the key to the salt gate, across the Salt Flats and onto the mesa, where the Dust King sits on the spring.</p>
+    <p>Five rooms, one story, about ten minutes. Scorpions, bats, prickly pears and a king made of dust.</p>
+  </section>
+
+  <section>
+    <h2>It runs on a computer we built</h2>
+    <p>Mirage is a native app inside Joshua Tree, an operating system written from scratch for PCs and the Raspberry Pi. No engine, no libraries: a few hundred lines of C, its own pixel art and a fixed-point physics loop. The copy on this page is the same C, compiled for your browser.</p>
+    <div class="cards">
+      <div class="card"><h3>Played to the end by Duke</h3><p>Duke, our autopilot for games, reads the state the game prints and plays it by keys alone. Every build of Joshua Tree replays its run and has to finish in exactly the same spot.</p></div>
+      <div class="card"><h3>All of it is ours</h3><p>The town, the people, the story, every sprite and every colour. Nothing borrowed, nothing licensed.</p></div>
+      <div class="card"><h3>Same game everywhere</h3><p>The PC build, the Pi and this page run one source file. A change to a room shows up in all three.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The ad</h2>
+    <video src="ad.mp4" poster="ad-poster.jpg" controls playsinline preload="none"></video>
+  </section>
+
+  <section>
+    <a class="cta" href="https://joshuatree.jaybulb.com">Get Joshua Tree</a><a class="cta ghost" href="https://github.com/nulljosh/mirage">Source</a>
+  </section>
+
+  <footer>Mirage is part of <a href="https://joshuatree.jaybulb.com">Joshua Tree</a>. Made by <a href="https://jaybulb.com">Joshua Trommel</a>.</footer>
+</main>
+<script>
+(async () => {
+  const W = 960, H = 540, canvas = document.getElementById("screen"), ctx = canvas.getContext("2d"), box = document.getElementById("game");
+  let mem;
+  const dec = new TextDecoder();
+  const { instance } = await WebAssembly.instantiateStreaming(fetch("mirage.wasm"), {
+    jt: { syscall: (n, a, b, c) => n === 4 ? c : -1 }   // the game's state lines: write(1), dropped here
+  });
+  const g = instance.exports; mem = g.memory;
+  const fb = g.mirage_start(W, H), img = ctx.createImageData(W, H), px = new Uint32Array(img.data.buffer);
+  const ticks = () => Math.floor(performance.now() / 10);   // the OS clock: 100 ticks a second
+  const blit = () => {   // 0x00RRGGBB in, RGBA out
+    const src = new Uint32Array(mem.buffer, fb, W * H);
+    for (let i = 0; i < src.length; i++) { const v = src[i]; px[i] = 0xff000000 | (v & 0xff) << 16 | (v & 0xff00) | (v >> 16 & 0xff); }
+    ctx.putImageData(img, 0, 0);
+  };
+  blit();
+  const CODES = { ArrowUp: 256, ArrowDown: 257, Enter: 258, ArrowLeft: 261, ArrowRight: 262 };
+  const press = k => { g.mirage_key(k, ticks()); blit(); };
+  box.addEventListener("keydown", e => {
+    const k = CODES[e.key] || (e.key.length === 1 ? e.key.toLowerCase().charCodeAt(0) : 0);
+    if (!k || e.metaKey || e.ctrlKey) return;
+    e.preventDefault(); press(k);
+  });
+  box.addEventListener("pointerdown", () => box.focus());
+  // the touch pad: a held button repeats like a held key
+  document.querySelectorAll(".pad button").forEach(b => {
+    let t = 0;
+    const k = +b.dataset.key, stop = () => { clearInterval(t); t = 0; };
+    b.addEventListener("pointerdown", e => { e.preventDefault(); press(k); if (k === 97 || k === 100) t = setInterval(() => press(k), 80); });
+    ["pointerup", "pointerleave", "pointercancel"].forEach(ev => b.addEventListener(ev, stop));
+  });
+  const loop = () => { if (g.mirage_tick(ticks())) blit(); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

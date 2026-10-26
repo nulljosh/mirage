@@ -1,0 +1,12 @@
+name = "mirage"
+compatibility_date = "2025-01-01"
+
+[assets]
+directory = "landing"
+
+[[routes]]
+pattern = "mirage.jaybulb.com"
+custom_domain = true
+
+[observability]
+enabled = true
