@@ -16,13 +16,10 @@ struct GameView: View {
                     screen.frame(maxWidth: .infinity, maxHeight: .infinity)
                     Pad(game: game).padding(.horizontal, 24).padding(.bottom, 20)
                         .frame(maxHeight: .infinity, alignment: .bottom)
-                } else {
-                    VStack(spacing: 0) {
-                        screen.padding(.top, 8)
-                        Spacer(minLength: 24)
-                        Pad(game: game).padding(.horizontal, 20)
-                        Spacer(minLength: 24)
-                    }
+                } else {   /* the game dead centre, the controls along the bottom */
+                    screen.frame(maxWidth: .infinity, maxHeight: .infinity)
+                    Pad(game: game).padding(.horizontal, 20).padding(.bottom, 40)
+                        .frame(maxHeight: .infinity, alignment: .bottom)
                 }
             }
             .frame(width: geo.size.width, height: geo.size.height)
