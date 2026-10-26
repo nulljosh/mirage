@@ -1,6 +1,6 @@
 # Mirage brand
 
-**Name.** Mirage. One word, always capitalised. The town is Arroyo, the hero is Wren, the villain is the Dust King.
+**Name.** Mirage. One word, always capitalised. The town is Dry Creek, the hero is Wren, the villain is the Dust King.
 
 **Line.** The spring is real. Go and get it.
 

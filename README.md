@@ -4,12 +4,12 @@
 
 A small desert platformer that runs inside Joshua Tree, a computer built from scratch.
 
-The spring on the mesa has gone quiet and the town of Arroyo is out of water. Wren takes Elder Pina's walking staff and climbs through a canyon, a cave and a salt flat to the Dust King, who is sitting on the spring.
+The spring on the mesa has gone quiet and the town of Dry Creek is out of water. Wren takes Elder Pina's walking staff and climbs through a canyon, a cave and a salt flat to the Dust King, who is sitting on the spring.
 
 **[mirage.jaybulb.com →](https://mirage.jaybulb.com)** Play it on the page.
 
 <p>
-<img src="docs/shots/town.png" width="400" alt="The town of Arroyo">
+<img src="docs/shots/town.png" width="400" alt="The town of Dry Creek">
 <img src="docs/shots/canyon.png" width="400" alt="Red Canyon and a scorpion">
 <img src="docs/shots/king.png" width="400" alt="The Dust King on the mesa">
 <img src="docs/shots/spring.png" width="400" alt="The water back">
@@ -17,7 +17,7 @@ The spring on the mesa has gone quiet and the town of Arroyo is out of water. Wr
 
 ## Features
 
-- Five rooms, one story, about ten minutes: Arroyo, Red Canyon, the Cholla Caves, the Salt Flats and the Mesa.
+- Five rooms, one story, about ten minutes: Dry Creek, Red Canyon, the Cholla Caves, the Salt Flats and the Mesa.
 - Our own pixel art, characters and story. Nothing borrowed.
 - A native app in Joshua Tree on the PC build and the Raspberry Pi, and the same C compiled to WebAssembly for the landing.
 - Played to the end by Duke, the games autopilot. Joshua Tree's checks replay Duke's run and must finish in the same spot on the host and in the OS.
