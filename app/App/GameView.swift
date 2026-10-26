@@ -61,53 +61,86 @@ struct GameView: View {
 }
 
 #if os(iOS)
-/// Touch controls: a held walk button repeats like a held key.
+/// Touch controls the way a handheld has them: a D-pad on the left (Down talks and turns the page), A to jump and B to
+/// swing on the right. A held direction repeats like a held key.
 struct Pad: View {
     @ObservedObject var game: Game
 
     var body: some View {
-        HStack(spacing: 8) {
-            Hold(title: "Left", code: Key.letter("a"), game: game)
-            Hold(title: "Right", code: Key.letter("d"), game: game)
-            Spacer(minLength: 8)
-            Tap(title: "Talk", code: Key.letter("s"), game: game)
-            Tap(title: "Jump", code: Key.letter("w"), game: game)
-            Tap(title: "Swing", code: 32, game: game, accent: true)
+        HStack(alignment: .center) {
+            DPad(game: game)
+            Spacer(minLength: 16)
+            HStack(alignment: .bottom, spacing: 16) {
+                RoundButton(label: "B", code: 32, game: game).offset(y: 18)
+                RoundButton(label: "A", code: Key.letter("w"), game: game, accent: true).offset(y: -18)
+            }
         }
+        .padding(.horizontal, 8)
+        .frame(maxHeight: 176)
     }
 }
 
-private struct Tap: View {
-    let title: String, code: Int32
+private struct DPad: View {
     @ObservedObject var game: Game
-    var accent = false
+    private let arm: CGFloat = 52
     var body: some View {
-        Button(title) { game.press(code) }
-            .font(.headline)
-            .frame(minWidth: 64, minHeight: 48)
-            .background(Capsule().fill(accent ? Color(red: 0xB5 / 255, green: 0x50 / 255, blue: 0x2C / 255) : Color.white.opacity(0.12)))
-            .foregroundStyle(.white)
-            .buttonStyle(.plain)
+        ZStack {
+            RoundedRectangle(cornerRadius: 10).fill(Color.white.opacity(0.10)).frame(width: arm, height: arm * 3)
+            RoundedRectangle(cornerRadius: 10).fill(Color.white.opacity(0.10)).frame(width: arm * 3, height: arm)
+            VStack(spacing: 0) {
+                Arrow(symbol: "arrowtriangle.up.fill", code: Key.letter("w"), game: game, repeats: false)
+                HStack(spacing: arm) {
+                    Arrow(symbol: "arrowtriangle.left.fill", code: Key.letter("a"), game: game, repeats: true)
+                    Arrow(symbol: "arrowtriangle.right.fill", code: Key.letter("d"), game: game, repeats: true)
+                }
+                Arrow(symbol: "arrowtriangle.down.fill", code: Key.letter("s"), game: game, repeats: false)
+            }
+        }
+        .frame(width: arm * 3, height: arm * 3)
     }
 }
 
-private struct Hold: View {
-    let title: String, code: Int32
+private struct Arrow: View {
+    let symbol: String, code: Int32
     @ObservedObject var game: Game
+    let repeats: Bool
     @State private var timer: Timer?
+    @State private var down = false
     var body: some View {
-        Text(title)
-            .font(.headline)
-            .frame(minWidth: 72, minHeight: 48)
-            .background(Capsule().fill(Color.white.opacity(0.12)))
-            .foregroundStyle(.white)
+        Image(systemName: symbol)
+            .font(.system(size: 20, weight: .bold))
+            .foregroundStyle(.white.opacity(down ? 1 : 0.75))
+            .frame(width: 52, height: 52)
+            .contentShape(Rectangle())
             .gesture(DragGesture(minimumDistance: 0)
                 .onChanged { _ in
-                    guard timer == nil else { return }
+                    guard !down else { return }
+                    down = true
                     game.press(code)
-                    timer = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: true) { _ in Task { @MainActor in game.press(code) } }
+                    if repeats { timer = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: true) { _ in Task { @MainActor in game.press(code) } } }
                 }
-                .onEnded { _ in timer?.invalidate(); timer = nil })
+                .onEnded { _ in down = false; timer?.invalidate(); timer = nil })
+            .accessibilityLabel(symbol.contains("left") ? "Left" : symbol.contains("right") ? "Right" : symbol.contains("up") ? "Jump" : "Talk")
+            .accessibilityAddTraits(.isButton)
+    }
+}
+
+private struct RoundButton: View {
+    let label: String, code: Int32
+    @ObservedObject var game: Game
+    var accent = false
+    @State private var down = false
+    var body: some View {
+        Text(label)
+            .font(.system(size: 22, weight: .heavy, design: .rounded))
+            .foregroundStyle(.white)
+            .frame(width: 68, height: 68)
+            .background(Circle().fill(accent ? Color(red: 0xB5 / 255, green: 0x50 / 255, blue: 0x2C / 255) : Color.white.opacity(0.16)))
+            .scaleEffect(down ? 0.92 : 1)
+            .gesture(DragGesture(minimumDistance: 0)
+                .onChanged { _ in if !down { down = true; game.press(code) } }
+                .onEnded { _ in down = false })
+            .accessibilityLabel(label == "A" ? "A, jump" : "B, swing")
             .accessibilityAddTraits(.isButton)
     }
 }

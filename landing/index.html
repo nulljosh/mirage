@@ -24,9 +24,16 @@
   .game:focus .hint { display: none; }
   .keys { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s3); color: var(--muted); font-size: 15px; margin: var(--s2) 0 0; }
   kbd { font-family: var(--font); font-size: 13px; border: 1px solid var(--line); border-radius: var(--r-sm); padding: 2px 8px; color: var(--ink); }
-  .pad { display: none; gap: var(--s1); margin-top: var(--s2); }
-  .pad button { flex: 1; height: var(--control); border-radius: var(--r-pill); border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: 600 15px var(--font); touch-action: manipulation; -webkit-user-select: none; user-select: none; }
-  .pad button.go { background: var(--terra); border-color: var(--terra); color: #faf8f4; }
+  .pad { display: none; justify-content: space-between; align-items: center; margin-top: var(--s3); -webkit-user-select: none; user-select: none; }
+  .dpad { display: grid; grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(3, 52px); }
+  .dpad button, .ab button { border: 0; touch-action: none; color: #faf8f4; font: 800 22px var(--font); }
+  .dpad button { background: rgba(28,28,30,.12); color: var(--ink); font-size: 18px; }
+  .dpad .u { grid-area: 1 / 2; border-radius: 10px 10px 0 0; } .dpad .l { grid-area: 2 / 1; border-radius: 10px 0 0 10px; }
+  .dpad .r { grid-area: 2 / 3; border-radius: 0 10px 10px 0; } .dpad .d { grid-area: 3 / 2; border-radius: 0 0 10px 10px; }
+  .dpad .c { grid-area: 2 / 2; background: rgba(28,28,30,.12); }
+  .ab { display: flex; gap: var(--s2); align-items: flex-end; }
+  .ab button { width: 68px; height: 68px; border-radius: 50%; background: #3a3632; }
+  .ab .a { background: var(--terra); transform: translateY(-18px); } .ab .b { transform: translateY(18px); }
   @media (hover: none) and (pointer: coarse) { .pad { display: flex; } .keys { display: none; } }
   section { margin-top: var(--s12); }
   h2 { font-size: 24px; letter-spacing: -0.01em; margin: 0 0 var(--s2); }
@@ -53,7 +60,8 @@
   </div>
   <div class="keys"><span><kbd>A</kbd> <kbd>D</kbd> walk</span><span><kbd>W</kbd> jump</span><span><kbd>Space</kbd> swing</span><span><kbd>S</kbd> talk and turn the page</span></div>
   <div class="pad" aria-hidden="true">
-    <button data-key="97">Left</button><button data-key="100">Right</button><button data-key="119">Jump</button><button class="go" data-key="32">Swing</button><button data-key="115">Talk</button>
+    <div class="dpad"><button class="u" data-key="119">&#9650;</button><button class="l" data-key="97">&#9664;</button><span class="c"></span><button class="r" data-key="100">&#9654;</button><button class="d" data-key="115">&#9660;</button></div>
+    <div class="ab"><button class="b" data-key="32">B</button><button class="a" data-key="119">A</button></div>
   </div>
 
   <section>
