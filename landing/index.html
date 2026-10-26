@@ -101,6 +101,7 @@
   });
   const g = instance.exports; mem = g.memory;
   const fb = g.mirage_start(W, H), img = ctx.createImageData(W, H), px = new Uint32Array(img.data.buffer);
+  if (matchMedia("(pointer: coarse)").matches) g.mirage_touch();   // a phone: the D-pad below, no keyboard hints in the game
   const ticks = () => Math.floor(performance.now() / 10);   // the OS clock: 100 ticks a second
   const blit = () => {   // 0x00RRGGBB in, RGBA out
     const src = new Uint32Array(mem.buffer, fb, W * H);

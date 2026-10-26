@@ -8,18 +8,21 @@ struct GameView: View {
         #if os(iOS)
         GeometryReader { geo in
             let landscape = geo.size.width > geo.size.height
-            ZStack {
+            ZStack(alignment: .top) {
                 backdrop.frame(width: geo.size.width + geo.safeAreaInsets.leading + geo.safeAreaInsets.trailing,
                                height: geo.size.height + geo.safeAreaInsets.top + geo.safeAreaInsets.bottom).clipped()
                     .ignoresSafeArea()
-                if landscape {
-                    screen.frame(maxWidth: .infinity, maxHeight: .infinity)
+                if landscape {   /* the game fills the screen; the controls float over its lower corners */
+                    screen(CGSize(width: geo.size.width, height: geo.size.height))
                     Pad(game: game).padding(.horizontal, 24).padding(.bottom, 20)
                         .frame(maxHeight: .infinity, alignment: .bottom)
-                } else {   /* the game dead centre, the controls along the bottom */
-                    screen.frame(maxWidth: .infinity, maxHeight: .infinity)
-                    Pad(game: game).padding(.horizontal, 20).padding(.bottom, 40)
-                        .frame(maxHeight: .infinity, alignment: .bottom)
+                } else {         /* upright: the game takes the top 60 percent edge to edge, the controls the rest */
+                    let top = (geo.size.height + geo.safeAreaInsets.top + geo.safeAreaInsets.bottom) * 0.6 - geo.safeAreaInsets.top
+                    VStack(spacing: 0) {
+                        screen(CGSize(width: geo.size.width, height: top))
+                        Pad(game: game).padding(.horizontal, 20)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
                 }
             }
             .frame(width: geo.size.width, height: geo.size.height)
@@ -27,7 +30,7 @@ struct GameView: View {
         .statusBarHidden(true)
         .persistentSystemOverlays(.hidden)
         #else
-        screen
+        screen(nil)
             .padding(16)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(red: 0x14 / 255, green: 0x13 / 255, blue: 0x11 / 255))
@@ -47,7 +50,8 @@ struct GameView: View {
         }
     }
 
-    private var screen: some View {
+    /// The game's picture, drawn the shape of `size` when one is given (the phone), else 960 by 540 fitted (the Mac).
+    private func screen(_ size: CGSize?) -> some View {
         TimelineView(.animation) { _ in
             Group {
                 if let frame = game.frame {
@@ -56,9 +60,13 @@ struct GameView: View {
                     Color.black
                 }
             }
-            .aspectRatio(CGFloat(Game.width) / CGFloat(Game.height), contentMode: .fit)
+            .aspectRatio(CGFloat(game.width) / CGFloat(game.height), contentMode: .fit)
+            .frame(width: size?.width, height: size?.height)
             .onChange(of: Date().timeIntervalSinceReferenceDate) { _, _ in game.advance() }
         }
+        .onAppear { if let size { game.fit(size) } }
+        .onChange(of: size?.width) { _, _ in if let size { game.fit(size) } }
+        .onChange(of: size?.height) { _, _ in if let size { game.fit(size) } }
         .focusable()
         .focusEffectDisabled()
         .focused($focused)
